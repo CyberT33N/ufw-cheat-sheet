@@ -1,13 +1,24 @@
 # ufw-cheat-sheet
 
+<br><br>
+<br><br>
+
+## Logs
+```shell
+sudo tail -f /var/log/ufw.log
+```
 
 
 
 
+<br><br>
+<br><br>
+_____________________________________
+_____________________________________
+<br><br>
+<br><br>
 
-
-
-
+# Deny forward, incoming & outgoing 
 
 The following code will not allow traffic from your own device e.g. WLAN/LAN to any other Port than DNS (53), local (192.168.0.0/16), NORDVPN(51820) & OPENVPN (1197). 
 
