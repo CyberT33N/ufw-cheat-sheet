@@ -57,6 +57,35 @@ sudo ufw allow out on nordlynx to any port 22 proto tcp
 # docker - will be also used in minikube start- They use IPv6 Range
 sudo ufw allow out on nordlynx from fe80::/64 to any port 22
 
+
+
+# ---------------------------
+
+# =====================
+# ====== MINIKUBE =====
+# =====================
+
+# Erlaube ausgehenden Traffic auf Port 8443 (Kubernetes API Server) über den Minikube-Adapter
+sudo ufw allow out on br-66dceb3ba20e to any port 8443 proto tcp comment 'Allow Kubernetes API Server'
+
+# Erlaube ausgehenden Traffic auf den Ports 30000-32767 (NodePorts für Kubernetes Services) über den Minikube-Adapter
+sudo ufw allow out on br-66dceb3ba20e to any port 30000:32767 proto tcp comment 'Allow NodePorts for Kubernetes Services'
+
+# Erlaube ausgehenden Traffic auf den Ports 2379-2380 (etcd) über den Minikube-Adapter
+sudo ufw allow out on br-66dceb3ba20e to any port 2379:2380 proto tcp comment 'Allow etcd communication'
+
+# Erlaube ausgehenden Traffic auf Port 53 (DNS, UDP) über den Minikube-Adapter
+sudo ufw allow out on br-66dceb3ba20e to any port 53 proto udp comment 'Allow DNS (UDP)'
+
+# Erlaube ausgehenden Traffic auf Port 53 (DNS, TCP) über den Minikube-Adapter
+sudo ufw allow out on br-66dceb3ba20e to any port 53 proto tcp comment 'Allow DNS (TCP)'
+
+# Erlaube ausgehenden Traffic auf Port 10250 (Kubelet) über den Minikube-Adapter
+sudo ufw allow out on br-66dceb3ba20e to any port 10250 proto tcp comment 'Allow Kubelet communication'
+
+# Erlaube ausgehenden Traffic auf Port 22 (SSH) über den Minikube-Adapter
+sudo ufw allow out on br-66dceb3ba20e to any port 22 proto tcp comment 'Allow SSH access'
+
 # ---------------------------
 
 # =====================
