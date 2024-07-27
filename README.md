@@ -65,6 +65,9 @@ sudo ufw allow out on nordlynx from fe80::/64 to any port 22
 # ====== MINIKUBE =====
 # =====================
 
+# Erlaube Zugriff auf Minikube IP
+sudo ufw allow out on br-66dceb3ba20e to 192.168.49.2
+
 # Erlaube ausgehenden Traffic auf Port 8443 (Kubernetes API Server) über den Minikube-Adapter
 sudo ufw allow out on br-66dceb3ba20e to any port 8443 proto tcp comment 'Allow Kubernetes API Server'
 
