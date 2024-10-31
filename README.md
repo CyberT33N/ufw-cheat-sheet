@@ -19,8 +19,7 @@ _____________________________________
 <br><br>
 
 # Deny forward, incoming & outgoing 
-
-The following commands will not allow traffic from your own device e.g. WLAN/LAN to any other Port than DNS (53), local (192.168.0.0/16), NORDVPN(51820) & OPENVPN (1197, 1194). 
+- The following code will work with openvpn aswell with the nordvpn client with nordlynx technology. It will not allow traffic from your own device e.g. WLAN/LAN to any other Port than DNS (53), local (192.168.0.0/16), NORDVPN(51820) & OPENVPN (1197, 1194). 
 
 If connected to VPN we will allow only http, https & DNS:
 ```shell
