@@ -58,6 +58,7 @@ sudo ufw allow out on nordlynx to any port 22 proto tcp
 sudo ufw allow out on nordlynx from fe80::/64 to any port 22
 
 # openvpn
+sudo ufw allow out on tun0
 sudo ufw allow out 1194/udp
 
 
