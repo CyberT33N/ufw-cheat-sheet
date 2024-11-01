@@ -49,12 +49,16 @@ sudo ufw default deny outgoing
 # Allow only http, https & DNS
 sudo ufw allow out on nordlynx to any port 80,443,53,8080 proto tcp
 sudo ufw allow out on nordlynx to any port 80,443,53,8080 proto udp
+sudo ufw allow out on nordtun to any port 80,443,53,8080 proto tcp
+sudo ufw allow out on nordtun to any port 80,443,53,8080 proto udp
 
 # git ssh
 sudo ufw allow out on nordlynx to any port 22 proto tcp
+sudo ufw allow out on nordtun to any port 22 proto tcp
 
 # docker - will be also used in minikube start- They use IPv6 Range
 sudo ufw allow out on nordlynx from fe80::/64 to any port 22
+sudo ufw allow out on nordtun from fe80::/64 to any port 22
 
 # openvpn
 sudo ufw allow out on tun0
