@@ -103,8 +103,8 @@ sudo ufw allow out on br-66dceb3ba20e to any port 22 proto tcp comment 'Allow SS
 # =====================
 
 # Allow outgoing traffic from your device to DNS (53), NORDVPN(51820) & OPENVPN (1197)
-sudo ufw allow out on wlp0s20f3 to any port 53,51820,1197, 1194 proto udp
-sudo ufw allow out on wlp0s20f3 to any port 53,51820,1197, 1194 proto tcp
+sudo ufw allow out on wlp0s20f3 to any port 53, 51820, 1197, 1194 proto udp
+sudo ufw allow out on wlp0s20f3 to any port 53, 51820, 1197, 1194, 443 proto tcp
 
 # Allow NTP
 # sudo ufw allow out on wlp0s20f3 to any port 123 proto udp comment 'allow NTP'
