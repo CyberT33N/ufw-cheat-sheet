@@ -63,6 +63,7 @@ sudo ufw allow out on nordtun from fe80::/64 to any port 22
 # openvpn
 sudo ufw allow out on tun0
 sudo ufw allow out 1194/udp
+sudo ufw allow out 1194/tcp
 
 
 # ---------------------------
