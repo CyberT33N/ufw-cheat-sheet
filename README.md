@@ -112,6 +112,20 @@ sudo ufw allow out on wlp0s20f3 to any port 53, 51820, 1197, 1194 proto tcp
 # Allow local networks (optional)
 sudo ufw allow out on wlp0s20f3 to 192.168.0.0/16 comment 'allow local network'
 
+# =====================
+# ====== ETHERNET =========
+# =====================
+
+# Allow outgoing traffic from your device to DNS (53), NORDVPN(51820) & OPENVPN (1197)
+sudo ufw allow out on enp0s31f6 to any port 53, 51820, 1197, 1194 proto udp
+sudo ufw allow out on enp0s31f6 to any port 53, 51820, 1197, 1194 proto tcp
+
+# Allow NTP
+# sudo ufw allow out on enp0s31f6 to any port 123 proto udp comment 'allow NTP'
+
+# Allow local networks (optional)
+sudo ufw allow out on enp0s31f6 to 192.168.0.0/16 comment 'allow local network'
+
 # ---------------------------
 
 sudo ufw status verbose
