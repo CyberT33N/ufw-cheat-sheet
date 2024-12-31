@@ -42,6 +42,18 @@ sudo ufw default deny outgoing comment 'Default deny outgoing traffic'
 # ====== VPN ==========
 # =====================
 
+# HTTP/HTTPS rules for wg-CH-CZ-1 (My wireguard adapter)
+sudo ufw allow out on wg-CH-CZ-1 to any port 80 proto tcp comment 'Allow HTTP over wg-CH-CZ-1'
+sudo ufw allow out on wg-CH-CZ-1 to any port 443 proto tcp comment 'Allow HTTPS over wg-CH-CZ-1'
+sudo ufw allow out on wg-CH-CZ-1 to any port 53 proto tcp comment 'Allow DNS TCP over wg-CH-CZ-1'
+sudo ufw allow out on wg-CH-CZ-1 to any port 8080 proto tcp comment 'Allow alternate HTTP over wg-CH-CZ-1'
+
+# HTTP/HTTPS rules for wg-CH-CZ-1 (UDP)
+sudo ufw allow out on wg-CH-CZ-1 to any port 80 proto udp comment 'Allow HTTP UDP over wg-CH-CZ-1'
+sudo ufw allow out on wg-CH-CZ-1 to any port 443 proto udp comment 'Allow HTTPS UDP over wg-CH-CZ-1'
+sudo ufw allow out on wg-CH-CZ-1 to any port 53 proto udp comment 'Allow DNS UDP over wg-CH-CZ-1'
+sudo ufw allow out on wg-CH-CZ-1 to any port 8080 proto udp comment 'Allow alternate HTTP UDP over wg-CH-CZ-1'
+
 # HTTP/HTTPS rules for main_os-CH-AT-1 (My wireguard adapter)
 sudo ufw allow out on main_os-CH-AT-1 to any port 80 proto tcp comment 'Allow HTTP over main_os-CH-AT-1'
 sudo ufw allow out on main_os-CH-AT-1 to any port 443 proto tcp comment 'Allow HTTPS over main_os-CH-AT-1'
@@ -82,11 +94,13 @@ sudo ufw allow out on nordtun to any port 8080 proto udp comment 'Allow alternat
 sudo ufw allow out on nordlynx to any port 22 proto tcp comment 'Allow Git SSH over nordlynx'
 sudo ufw allow out on nordtun to any port 22 proto tcp comment 'Allow Git SSH over nordtun'
 sudo ufw allow out on main_os-CH-AT-1 to any port 22 proto tcp comment 'Allow Git SSH over main_os-CH-AT-1'
+sudo ufw allow out on wg-CH-CZ-1 to any port 22 proto tcp comment 'Allow Git SSH over main_os-CH-AT-1'
 
 # Docker IPv6 rules
 sudo ufw allow out on nordlynx from fe80::/64 to any port 22 comment 'Allow Docker IPv6 over nordlynx'
 sudo ufw allow out on nordtun from fe80::/64 to any port 22 comment 'Allow Docker IPv6 over nordtun'
 sudo ufw allow out on main_os-CH-AT-1 from fe80::/64 to any port 22 comment 'Allow Docker IPv6 over main_os-CH-AT-1'
+sudo ufw allow out on wg-CH-CZ-1 from fe80::/64 to any port 22 comment 'Allow Docker IPv6 over main_os-CH-AT-1'
 
 # OpenVPN rules
 sudo ufw allow out on tun0 comment 'Allow all traffic on tun0'
