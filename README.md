@@ -22,113 +22,135 @@ _____________________________________
 - The following code will work with openvpn aswell with the nordvpn client with nordlynx technology. It will not allow traffic from your own device e.g. WLAN/LAN to any other Port than DNS (53), local (192.168.0.0/16), NORDVPN(51820) & OPENVPN (1197, 1194). 
 
 If connected to VPN we will allow only http, https & DNS:
+
+
+
+
 ```shell
+# Reset and enable UFW
 sudo ufw reset
 sudo ufw enable
-
-# ---------------------------
 
 # =====================
 # ====== GLOBAL =======
 # =====================
 
-# Deny all
-sudo ufw default deny forward
-sudo ufw default deny incoming
-sudo ufw default deny outgoing
-
-# ---------------------------
+# Set default policies to deny all traffic
+sudo ufw default deny forward comment 'Default deny forward traffic'
+sudo ufw default deny incoming comment 'Default deny incoming traffic'
+sudo ufw default deny outgoing comment 'Default deny outgoing traffic'
 
 # =====================
 # ====== VPN ==========
 # =====================
 
-# If you want to allow any outgoing port
-# sudo ufw allow out on nordlynx
+# HTTP/HTTPS rules for nordlynx
+sudo ufw allow out on nordlynx to any port 80 proto tcp comment 'Allow HTTP over nordlynx'
+sudo ufw allow out on nordlynx to any port 443 proto tcp comment 'Allow HTTPS over nordlynx'
+sudo ufw allow out on nordlynx to any port 53 proto tcp comment 'Allow DNS TCP over nordlynx'
+sudo ufw allow out on nordlynx to any port 8080 proto tcp comment 'Allow alternate HTTP over nordlynx'
 
-# Allow only http, https & DNS
-sudo ufw allow out on nordlynx to any port 80,443,53,8080 proto tcp
-sudo ufw allow out on nordlynx to any port 80,443,53,8080 proto udp
-sudo ufw allow out on nordtun to any port 80,443,53,8080 proto tcp
-sudo ufw allow out on nordtun to any port 80,443,53,8080 proto udp
+# HTTP/HTTPS rules for nordlynx (UDP)
+sudo ufw allow out on nordlynx to any port 80 proto udp comment 'Allow HTTP UDP over nordlynx'
+sudo ufw allow out on nordlynx to any port 443 proto udp comment 'Allow HTTPS UDP over nordlynx'
+sudo ufw allow out on nordlynx to any port 53 proto udp comment 'Allow DNS UDP over nordlynx'
+sudo ufw allow out on nordlynx to any port 8080 proto udp comment 'Allow alternate HTTP UDP over nordlynx'
 
-# git ssh
-sudo ufw allow out on nordlynx to any port 22 proto tcp
-sudo ufw allow out on nordtun to any port 22 proto tcp
+# HTTP/HTTPS rules for nordtun
+sudo ufw allow out on nordtun to any port 80 proto tcp comment 'Allow HTTP over nordtun'
+sudo ufw allow out on nordtun to any port 443 proto tcp comment 'Allow HTTPS over nordtun'
+sudo ufw allow out on nordtun to any port 53 proto tcp comment 'Allow DNS TCP over nordtun'
+sudo ufw allow out on nordtun to any port 8080 proto tcp comment 'Allow alternate HTTP over nordtun'
 
-# docker - will be also used in minikube start- They use IPv6 Range
-sudo ufw allow out on nordlynx from fe80::/64 to any port 22
-sudo ufw allow out on nordtun from fe80::/64 to any port 22
+# HTTP/HTTPS rules for nordtun (UDP)
+sudo ufw allow out on nordtun to any port 80 proto udp comment 'Allow HTTP UDP over nordtun'
+sudo ufw allow out on nordtun to any port 443 proto udp comment 'Allow HTTPS UDP over nordtun'
+sudo ufw allow out on nordtun to any port 53 proto udp comment 'Allow DNS UDP over nordtun'
+sudo ufw allow out on nordtun to any port 8080 proto udp comment 'Allow alternate HTTP UDP over nordtun'
 
-# openvpn
-sudo ufw allow out on tun0
-sudo ufw allow out on tun1
-sudo ufw allow out 1194/udp
-sudo ufw allow out 1194/tcp
+# Git SSH rules
+sudo ufw allow out on nordlynx to any port 22 proto tcp comment 'Allow Git SSH over nordlynx'
+sudo ufw allow out on nordtun to any port 22 proto tcp comment 'Allow Git SSH over nordtun'
 
+# Docker IPv6 rules
+sudo ufw allow out on nordlynx from fe80::/64 to any port 22 comment 'Allow Docker IPv6 over nordlynx'
+sudo ufw allow out on nordtun from fe80::/64 to any port 22 comment 'Allow Docker IPv6 over nordtun'
 
-# ---------------------------
+# OpenVPN rules
+sudo ufw allow out on tun0 comment 'Allow all traffic on tun0'
+sudo ufw allow out on tun1 comment 'Allow all traffic on tun1'
+sudo ufw allow out 1194/udp comment 'Allow OpenVPN UDP'
+sudo ufw allow out 1194/tcp comment 'Allow OpenVPN TCP'
 
 # =====================
 # ====== MINIKUBE =====
 # =====================
 
-# Erlaube Zugriff auf Minikube IP
-sudo ufw allow out on br-66dceb3ba20e to 192.168.49.2
+# Allow Minikube IP access
+sudo ufw allow out on br-66dceb3ba20e to 192.168.49.2 comment 'Allow Minikube IP access'
 
-# Erlaube ausgehenden Traffic auf Port 8443 (Kubernetes API Server) über den Minikube-Adapter
+# Kubernetes API Server
 sudo ufw allow out on br-66dceb3ba20e to any port 8443 proto tcp comment 'Allow Kubernetes API Server'
 
-# Erlaube ausgehenden Traffic auf den Ports 30000-32767 (NodePorts für Kubernetes Services) über den Minikube-Adapter
+# NodePorts for Kubernetes Services
 sudo ufw allow out on br-66dceb3ba20e to any port 30000:32767 proto tcp comment 'Allow NodePorts for Kubernetes Services'
 
-# Erlaube ausgehenden Traffic auf den Ports 2379-2380 (etcd) über den Minikube-Adapter
+# etcd communication
 sudo ufw allow out on br-66dceb3ba20e to any port 2379:2380 proto tcp comment 'Allow etcd communication'
 
-# Erlaube ausgehenden Traffic auf Port 53 (DNS, UDP) über den Minikube-Adapter
-sudo ufw allow out on br-66dceb3ba20e to any port 53 proto udp comment 'Allow DNS (UDP)'
+# DNS rules for Minikube
+sudo ufw allow out on br-66dceb3ba20e to any port 53 proto udp comment 'Allow DNS UDP'
+sudo ufw allow out on br-66dceb3ba20e to any port 53 proto tcp comment 'Allow DNS TCP'
 
-# Erlaube ausgehenden Traffic auf Port 53 (DNS, TCP) über den Minikube-Adapter
-sudo ufw allow out on br-66dceb3ba20e to any port 53 proto tcp comment 'Allow DNS (TCP)'
-
-# Erlaube ausgehenden Traffic auf Port 10250 (Kubelet) über den Minikube-Adapter
+# Kubelet communication
 sudo ufw allow out on br-66dceb3ba20e to any port 10250 proto tcp comment 'Allow Kubelet communication'
 
-# Erlaube ausgehenden Traffic auf Port 22 (SSH) über den Minikube-Adapter
+# SSH access for Minikube
 sudo ufw allow out on br-66dceb3ba20e to any port 22 proto tcp comment 'Allow SSH access'
-
-# ---------------------------
 
 # =====================
 # ====== WLAN =========
 # =====================
 
-# Allow outgoing traffic from your device to DNS (53), NORDVPN(51820) & OPENVPN (1197)
-sudo ufw allow out on wlp0s20f3 to any port 53, 51820, 1197, 1194 proto udp
-sudo ufw allow out on wlp0s20f3 to any port 53, 51820, 1197, 1194 proto tcp
+# DNS rules
+sudo ufw allow out on wlp0s20f3 to any port 53 proto udp comment 'Allow DNS UDP over WLAN'
+sudo ufw allow out on wlp0s20f3 to any port 53 proto tcp comment 'Allow DNS TCP over WLAN'
 
-# Allow NTP
-# sudo ufw allow out on wlp0s20f3 to any port 123 proto udp comment 'allow NTP'
+# NordVPN
+sudo ufw allow out on wlp0s20f3 to any port 51820 proto udp comment 'Allow NordVPN UDP over WLAN'
+sudo ufw allow out on wlp0s20f3 to any port 51820 proto tcp comment 'Allow NordVPN TCP over WLAN'
 
-# Allow local networks (optional)
-sudo ufw allow out on wlp0s20f3 to 192.168.0.0/16 comment 'allow local network'
+# OpenVPN
+sudo ufw allow out on wlp0s20f3 to any port 1197 proto udp comment 'Allow OpenVPN UDP over WLAN'
+sudo ufw allow out on wlp0s20f3 to any port 1197 proto tcp comment 'Allow OpenVPN TCP over WLAN'
+sudo ufw allow out on wlp0s20f3 to any port 1194 proto udp comment 'Allow OpenVPN alternate UDP over WLAN'
+sudo ufw allow out on wlp0s20f3 to any port 1194 proto tcp comment 'Allow OpenVPN alternate TCP over WLAN'
+
+# Local network access
+sudo ufw allow out on wlp0s20f3 to 192.168.0.0/16 comment 'Allow local network over WLAN'
 
 # =====================
-# ====== ETHERNET =========
+# ===== ETHERNET ======
 # =====================
 
-# Allow outgoing traffic from your device to DNS (53), NORDVPN(51820) & OPENVPN (1197)
-sudo ufw allow out on enp0s31f6 to any port 53, 51820, 1197, 1194 proto udp
-sudo ufw allow out on enp0s31f6 to any port 53, 51820, 1197, 1194 proto tcp
+# DNS rules
+sudo ufw allow out on enp0s31f6 to any port 53 proto udp comment 'Allow DNS UDP over Ethernet'
+sudo ufw allow out on enp0s31f6 to any port 53 proto tcp comment 'Allow DNS TCP over Ethernet'
 
-# Allow NTP
-# sudo ufw allow out on enp0s31f6 to any port 123 proto udp comment 'allow NTP'
+# NordVPN
+sudo ufw allow out on enp0s31f6 to any port 51820 proto udp comment 'Allow NordVPN UDP over Ethernet'
+sudo ufw allow out on enp0s31f6 to any port 51820 proto tcp comment 'Allow NordVPN TCP over Ethernet'
 
-# Allow local networks (optional)
-sudo ufw allow out on enp0s31f6 to 192.168.0.0/16 comment 'allow local network'
+# OpenVPN
+sudo ufw allow out on enp0s31f6 to any port 1197 proto udp comment 'Allow OpenVPN UDP over Ethernet'
+sudo ufw allow out on enp0s31f6 to any port 1197 proto tcp comment 'Allow OpenVPN TCP over Ethernet'
+sudo ufw allow out on enp0s31f6 to any port 1194 proto udp comment 'Allow OpenVPN alternate UDP over Ethernet'
+sudo ufw allow out on enp0s31f6 to any port 1194 proto tcp comment 'Allow OpenVPN alternate TCP over Ethernet'
 
-# ---------------------------
+# Local network access
+sudo ufw allow out on enp0s31f6 to 192.168.0.0/16 comment 'Allow local network over Ethernet'
 
+# Final steps
 sudo ufw status verbose
 sudo ufw enable
 ```
