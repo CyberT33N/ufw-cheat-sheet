@@ -126,6 +126,14 @@ sudo ufw allow out on wlp0s20f3 to any port 1197 proto tcp comment 'Allow OpenVP
 sudo ufw allow out on wlp0s20f3 to any port 1194 proto udp comment 'Allow OpenVPN alternate UDP over WLAN'
 sudo ufw allow out on wlp0s20f3 to any port 1194 proto tcp comment 'Allow OpenVPN alternate TCP over WLAN'
 
+# IPsec/ISAKMP rules for VPN key exchange and tunnel management
+sudo ufw allow out on wlp0s20f3 to any port 500 proto udp comment 'Allow IPsec ISAKMP UDP'
+sudo ufw allow out on wlp0s20f3 to any port 500 proto tcp comment 'Allow IPsec ISAKMP TCP'
+
+# IPsec NAT Traversal
+sudo ufw allow out on wlp0s20f3 to any port 4500 proto udp comment 'Allow IPsec NAT Traversal UDP'
+sudo ufw allow out on wlp0s20f3 to any port 4500 proto tcp comment 'Allow IPsec NAT Traversal TCP'
+
 # Local network access
 sudo ufw allow out on wlp0s20f3 to 192.168.0.0/16 comment 'Allow local network over WLAN'
 
