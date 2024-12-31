@@ -19,15 +19,11 @@ _____________________________________
 <br><br>
 
 # Deny forward, incoming & outgoing 
-- The following code will work with openvpn aswell with the nordvpn client with nordlynx technology. It will not allow traffic from your own device e.g. WLAN/LAN to any other Port than DNS (53), local (192.168.0.0/16), NORDVPN(51820) & OPENVPN (1197, 1194). 
+- The following code will work with wireguard & openvpn aswell with the nordvpn client with nordlynx technology. It will not allow traffic from your own device e.g. WLAN/LAN to any other Port than DNS (53), local (192.168.0.0/16), NORDVPN(51820) & OPENVPN (1197, 1194). 
 - **If you want to allow outgoing you must add tcp 443 to your ethernet or wlan adapter**
 
 
 If connected to VPN we will allow only http, https & DNS:
-
-
-
-
 ```shell
 # Reset and enable UFW
 sudo ufw reset
@@ -45,6 +41,18 @@ sudo ufw default deny outgoing comment 'Default deny outgoing traffic'
 # =====================
 # ====== VPN ==========
 # =====================
+
+# HTTP/HTTPS rules for main_os-CH-AT-1 (My wireguard adapter)
+sudo ufw allow out on main_os-CH-AT-1 to any port 80 proto tcp comment 'Allow HTTP over main_os-CH-AT-1'
+sudo ufw allow out on main_os-CH-AT-1 to any port 443 proto tcp comment 'Allow HTTPS over main_os-CH-AT-1'
+sudo ufw allow out on main_os-CH-AT-1 to any port 53 proto tcp comment 'Allow DNS TCP over main_os-CH-AT-1'
+sudo ufw allow out on main_os-CH-AT-1 to any port 8080 proto tcp comment 'Allow alternate HTTP over main_os-CH-AT-1'
+
+# HTTP/HTTPS rules for main_os-CH-AT-1 (UDP)
+sudo ufw allow out on main_os-CH-AT-1 to any port 80 proto udp comment 'Allow HTTP UDP over main_os-CH-AT-1'
+sudo ufw allow out on main_os-CH-AT-1 to any port 443 proto udp comment 'Allow HTTPS UDP over main_os-CH-AT-1'
+sudo ufw allow out on main_os-CH-AT-1 to any port 53 proto udp comment 'Allow DNS UDP over main_os-CH-AT-1'
+sudo ufw allow out on main_os-CH-AT-1 to any port 8080 proto udp comment 'Allow alternate HTTP UDP over main_os-CH-AT-1'
 
 # HTTP/HTTPS rules for nordlynx
 sudo ufw allow out on nordlynx to any port 80 proto tcp comment 'Allow HTTP over nordlynx'
@@ -73,10 +81,12 @@ sudo ufw allow out on nordtun to any port 8080 proto udp comment 'Allow alternat
 # Git SSH rules
 sudo ufw allow out on nordlynx to any port 22 proto tcp comment 'Allow Git SSH over nordlynx'
 sudo ufw allow out on nordtun to any port 22 proto tcp comment 'Allow Git SSH over nordtun'
+sudo ufw allow out on main_os-CH-AT-1 to any port 22 proto tcp comment 'Allow Git SSH over main_os-CH-AT-1'
 
 # Docker IPv6 rules
 sudo ufw allow out on nordlynx from fe80::/64 to any port 22 comment 'Allow Docker IPv6 over nordlynx'
 sudo ufw allow out on nordtun from fe80::/64 to any port 22 comment 'Allow Docker IPv6 over nordtun'
+sudo ufw allow out on main_os-CH-AT-1 from fe80::/64 to any port 22 comment 'Allow Docker IPv6 over main_os-CH-AT-1'
 
 # OpenVPN rules
 sudo ufw allow out on tun0 comment 'Allow all traffic on tun0'
