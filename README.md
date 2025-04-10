@@ -142,6 +142,11 @@ sudo ufw allow out on br-66dceb3ba20e to any port 22 proto tcp comment 'Allow SS
 sudo ufw allow out on wlp0s20f3 to any port 53 proto udp comment 'Allow DNS UDP over WLAN'
 sudo ufw allow out on wlp0s20f3 to any port 53 proto tcp comment 'Allow DNS TCP over WLAN'
 
+# Wireguard
+sudo ufw allow out on wg-IS-CZ-1 to any comment 'Allow all outgoing traffic over wg-IS-CZ-1'
+sudo ufw allow out on wg-CH-CZ-1 to any comment 'Allow all outgoing traffic over wg-CH-CZ-1'
+sudo ufw allow out on main_os-CH-AT-1 to any comment 'Allow all outgoing traffic over main_os-CH-AT-1'
+
 # NordVPN
 sudo ufw allow out on wlp0s20f3 to any port 51820 proto udp comment 'Allow NordVPN UDP over WLAN'
 sudo ufw allow out on wlp0s20f3 to any port 51820 proto tcp comment 'Allow NordVPN TCP over WLAN'
