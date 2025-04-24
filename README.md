@@ -26,7 +26,7 @@ _____________________________________
 If connected to VPN we will allow only http, https & DNS:
 ```shell
 # Reset and enable UFW
-sudo ufw reset
+sudo ufw --force reset
 sudo ufw enable
 
 # =====================
@@ -38,57 +38,19 @@ sudo ufw default deny forward comment 'Default deny forward traffic'
 sudo ufw default deny incoming comment 'Default deny incoming traffic'
 sudo ufw default deny outgoing comment 'Default deny outgoing traffic'
 
+# Allow loopback traffic (essential)
+sudo ufw allow in on lo
+sudo ufw allow out on lo
+
 # =====================
 # ====== VPN ==========
 # =====================
 
-# HTTP/HTTPS rules for wg-CH-CZ-1 (My wireguard adapter)
-sudo ufw allow out on wg-CH-CZ-1 to any port 80 proto tcp comment 'Allow HTTP over wg-CH-CZ-1'
-sudo ufw allow out on wg-CH-CZ-1 to any port 443 proto tcp comment 'Allow HTTPS over wg-CH-CZ-1'
-sudo ufw allow out on wg-CH-CZ-1 to any port 53 proto tcp comment 'Allow DNS TCP over wg-CH-CZ-1'
-sudo ufw allow out on wg-CH-CZ-1 to any port 8080 proto tcp comment 'Allow alternate HTTP over wg-CH-CZ-1'
-
-# HTTP/HTTPS rules for wg-CH-CZ-1 (UDP)
-sudo ufw allow out on wg-CH-CZ-1 to any port 80 proto udp comment 'Allow HTTP UDP over wg-CH-CZ-1'
-sudo ufw allow out on wg-CH-CZ-1 to any port 443 proto udp comment 'Allow HTTPS UDP over wg-CH-CZ-1'
-sudo ufw allow out on wg-CH-CZ-1 to any port 53 proto udp comment 'Allow DNS UDP over wg-CH-CZ-1'
-sudo ufw allow out on wg-CH-CZ-1 to any port 8080 proto udp comment 'Allow alternate HTTP UDP over wg-CH-CZ-1'
-
-# HTTP/HTTPS rules for main_os-CH-AT-1 (My wireguard adapter)
-sudo ufw allow out on main_os-CH-AT-1 to any port 80 proto tcp comment 'Allow HTTP over main_os-CH-AT-1'
-sudo ufw allow out on main_os-CH-AT-1 to any port 443 proto tcp comment 'Allow HTTPS over main_os-CH-AT-1'
-sudo ufw allow out on main_os-CH-AT-1 to any port 53 proto tcp comment 'Allow DNS TCP over main_os-CH-AT-1'
-sudo ufw allow out on main_os-CH-AT-1 to any port 8080 proto tcp comment 'Allow alternate HTTP over main_os-CH-AT-1'
-
-# HTTP/HTTPS rules for main_os-CH-AT-1 (UDP)
-sudo ufw allow out on main_os-CH-AT-1 to any port 80 proto udp comment 'Allow HTTP UDP over main_os-CH-AT-1'
-sudo ufw allow out on main_os-CH-AT-1 to any port 443 proto udp comment 'Allow HTTPS UDP over main_os-CH-AT-1'
-sudo ufw allow out on main_os-CH-AT-1 to any port 53 proto udp comment 'Allow DNS UDP over main_os-CH-AT-1'
-sudo ufw allow out on main_os-CH-AT-1 to any port 8080 proto udp comment 'Allow alternate HTTP UDP over main_os-CH-AT-1'
-
-# HTTP/HTTPS rules for nordlynx
-sudo ufw allow out on nordlynx to any port 80 proto tcp comment 'Allow HTTP over nordlynx'
-sudo ufw allow out on nordlynx to any port 443 proto tcp comment 'Allow HTTPS over nordlynx'
-sudo ufw allow out on nordlynx to any port 53 proto tcp comment 'Allow DNS TCP over nordlynx'
-sudo ufw allow out on nordlynx to any port 8080 proto tcp comment 'Allow alternate HTTP over nordlynx'
-
-# HTTP/HTTPS rules for nordlynx (UDP)
-sudo ufw allow out on nordlynx to any port 80 proto udp comment 'Allow HTTP UDP over nordlynx'
-sudo ufw allow out on nordlynx to any port 443 proto udp comment 'Allow HTTPS UDP over nordlynx'
-sudo ufw allow out on nordlynx to any port 53 proto udp comment 'Allow DNS UDP over nordlynx'
-sudo ufw allow out on nordlynx to any port 8080 proto udp comment 'Allow alternate HTTP UDP over nordlynx'
-
-# HTTP/HTTPS rules for nordtun
-sudo ufw allow out on nordtun to any port 80 proto tcp comment 'Allow HTTP over nordtun'
-sudo ufw allow out on nordtun to any port 443 proto tcp comment 'Allow HTTPS over nordtun'
-sudo ufw allow out on nordtun to any port 53 proto tcp comment 'Allow DNS TCP over nordtun'
-sudo ufw allow out on nordtun to any port 8080 proto tcp comment 'Allow alternate HTTP over nordtun'
-
-# HTTP/HTTPS rules for nordtun (UDP)
-sudo ufw allow out on nordtun to any port 80 proto udp comment 'Allow HTTP UDP over nordtun'
-sudo ufw allow out on nordtun to any port 443 proto udp comment 'Allow HTTPS UDP over nordtun'
-sudo ufw allow out on nordtun to any port 53 proto udp comment 'Allow DNS UDP over nordtun'
-sudo ufw allow out on nordtun to any port 8080 proto udp comment 'Allow alternate HTTP UDP over nordtun'
+sudo ufw allow out on wg-CH-CZ-1 to any comment 'Allow ALL traffic over wg-CH-CZ-1'
+sudo ufw allow out on wg-IS-CZ-1 to any comment 'Allow ALL traffic over wg-IS-CZ-1'
+sudo ufw allow out on main_os-CH-AT-1 to any comment 'Allow ALL traffic over main_os-CH-AT-1'
+sudo ufw allow out on nordlynx to any comment 'Allow ALL traffic over nordlynx'
+sudo ufw allow out on nordtun to any comment 'Allow ALL traffic over nordtun'
 
 # Git SSH rules
 sudo ufw allow out on nordlynx to any port 22 proto tcp comment 'Allow Git SSH over nordlynx'
@@ -138,9 +100,23 @@ sudo ufw allow out on br-66dceb3ba20e to any port 22 proto tcp comment 'Allow SS
 # ====== WLAN =========
 # =====================
 
-# DNS rules
+# DNS rules - DNS Auflösung (um VPN Servernamen zu finden, falls nicht IP genutzt wird)
 sudo ufw allow out on wlp0s20f3 to any port 53 proto udp comment 'Allow DNS UDP over WLAN'
 sudo ufw allow out on wlp0s20f3 to any port 53 proto tcp comment 'Allow DNS TCP over WLAN'
+
+# 2. WireGuard Verbindung zum Server wg-CH-CZ-1 (IP und Port aus .conf)
+sudo ufw allow out on wlp0s20f3 to 185.159.157.217 port 51820 proto udp comment 'Allow WG wg-CH-CZ-1 connection via WLAN'
+
+# 3. WireGuard Verbindung zu anderen Servern (!!! PRÜFE die IPs/Ports in deren .conf Dateien !!!)
+# Beispiel: Finde Endpoint IP/Port für wg-IS-CZ-1 in /etc/wireguard/wg-IS-CZ-1.conf
+# sudo ufw allow out on wlp0s20f3 to <IP_VON_WG_IS_CZ_1> port <PORT_VON_WG_IS_CZ_1> proto udp comment 'Allow WG wg-IS-CZ-1 connection via WLAN'
+# Beispiel für main_os-CH-AT-1
+# sudo ufw allow out on wlp0s20f3 to <IP_VON_main_os-CH-AT-1> port <PORT_VON_main_os-CH-AT-1> proto udp comment 'Allow WG main_os-CH-AT-1 connection via WLAN'
+# Beispiel für NordLynx (falls du es direkt nutzt, Port ist oft 51820, IP variiert stark!) - Besser über die App steuern?
+
+# 4. Notwendige Kontrollverbindung (laut Logs)
+sudo ufw allow out on wlp0s20f3 to 185.70.42.36 port 443 proto tcp comment 'Allow Proton control connection via WLAN'
+# --> Falls Logs *andere* IPs auf Port 443 (TCP oder UDP) zeigen, die für VPN nötig sind, spezifisch hinzufügen!
 
 # Wireguard
 sudo ufw allow out on wg-IS-CZ-1 to any comment 'Allow all outgoing traffic over wg-IS-CZ-1'
@@ -197,9 +173,9 @@ sudo ufw enable
   ```shell
   netstat -u
   netstat -t
-
   ```
 
+<br><br>
 
 If needed this code is a basic example for only enable http, https & DNS to your WLAN/LAN:
 ```shell
