@@ -107,6 +107,7 @@ sudo ufw allow out on wlp0s20f3 to any port 53 proto tcp comment 'Allow DNS TCP 
 
 # 2. WireGuard Verbindung zum Server wg-CH-CZ-1 (IP und Port aus .conf)
 sudo ufw allow out on wlp0s20f3 to 185.159.157.217 port 51820 proto udp comment 'Allow WG wg-CH-CZ-1 connection via WLAN'
+sudo ufw allow out on wlp0s20f3 to 62.169.136.239 port 51820 proto udp comment 'Allow WG wg-CH-DK-2 connection via WLAN'
 
 # 3. WireGuard Verbindung zu anderen Servern (!!! PRÜFE die IPs/Ports in deren .conf Dateien !!!)
 # Beispiel: Finde Endpoint IP/Port für wg-IS-CZ-1 in /etc/wireguard/wg-IS-CZ-1.conf
@@ -123,6 +124,7 @@ sudo ufw allow out on wlp0s20f3 to 185.70.42.36 port 443 proto tcp comment 'Allo
 sudo ufw allow out on wg-IS-CZ-1 to any comment 'Allow all outgoing traffic over wg-IS-CZ-1'
 sudo ufw allow out on wg-CH-CZ-1 to any comment 'Allow all outgoing traffic over wg-CH-CZ-1'
 sudo ufw allow out on main_os-CH-AT-1 to any comment 'Allow all outgoing traffic over main_os-CH-AT-1'
+sudo ufw allow out on wg-CH-DK-2 to any comment 'Allow all outgoing traffic over wg-CH-DK-2'
 
 # NordVPN
 sudo ufw allow out on wlp0s20f3 to any port 51820 proto udp comment 'Allow NordVPN UDP over WLAN'
