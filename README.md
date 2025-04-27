@@ -48,6 +48,7 @@ sudo ufw allow out on lo
 
 sudo ufw allow out on wg-CH-CZ-1 to any comment 'Allow ALL traffic over wg-CH-CZ-1'
 sudo ufw allow out on wg-IS-CZ-1 to any comment 'Allow ALL traffic over wg-IS-CZ-1'
+sudo ufw allow out on wg-CH-DK-2 to any comment 'Allow ALL traffic over wg-CH-DK-2'
 sudo ufw allow out on main_os-CH-AT-1 to any comment 'Allow ALL traffic over main_os-CH-AT-1'
 sudo ufw allow out on nordlynx to any comment 'Allow ALL traffic over nordlynx'
 sudo ufw allow out on nordtun to any comment 'Allow ALL traffic over nordtun'
